@@ -1,7 +1,8 @@
-﻿namespace ElShaday.Domain.ValueObjects;
+﻿namespace ElShaday.Domain.Entities;
 
-public sealed record Address
+public sealed class Address : Entity
 {
+    public int PersonId { get; set; }
     public string Cep { get; private set; }
     public string Logradouro { get; private set; }
     public string Complemento { get; private set; }

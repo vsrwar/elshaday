@@ -1,5 +1,4 @@
 ﻿using ElShaday.Domain.Entities.Person.Abstractions;
-using ElShaday.Domain.ValueObjects;
 
 namespace ElShaday.Domain.Entities.Person;
 
@@ -18,6 +17,10 @@ public sealed class Employee : PhysicalPerson
     {
         _departments = departments;
     }
+
+    // EF Constructor
+    private Employee()
+    { }
 
     public void AddDepartament(Department department)
     {
