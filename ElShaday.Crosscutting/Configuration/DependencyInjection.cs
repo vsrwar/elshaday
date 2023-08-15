@@ -1,4 +1,6 @@
-﻿using ElShaday.Data.Context;
+﻿using ElShaday.Application.Interfaces;
+using ElShaday.Application.Services;
+using ElShaday.Data.Context;
 using ElShaday.Data.Repositories;
 using ElShaday.Domain.Entities;
 using ElShaday.Domain.Entities.Person;
@@ -30,6 +32,19 @@ public static class DependencyInjection
         services.AddScoped<IRepository<CustomerPhysicalPerson>, Repository<CustomerPhysicalPerson>>();
         services.AddScoped<IRepository<CustomerLegalPerson>, Repository<CustomerLegalPerson>>();
         services.AddScoped<IRepository<Address>, Repository<Address>>();
+        return services;
+    }
+
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddScoped<ICrudService<AdminUser>, CrudService<AdminUser>>();
+        services.AddScoped<ICrudService<CommonUser>, CrudService<CommonUser>>();
+        services.AddScoped<ICrudService<Department>, CrudService<Department>>();
+        services.AddScoped<ICrudService<Supplier>, CrudService<Supplier>>();
+        services.AddScoped<ICrudService<Employee>, CrudService<Employee>>();
+        services.AddScoped<ICrudService<CustomerPhysicalPerson>, CrudService<CustomerPhysicalPerson>>();
+        services.AddScoped<ICrudService<CustomerLegalPerson>, CrudService<CustomerLegalPerson>>();
+        services.AddScoped<ICrudService<Address>, CrudService<Address>>();
         return services;
     }
 }
