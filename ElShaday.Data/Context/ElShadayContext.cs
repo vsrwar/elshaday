@@ -7,8 +7,7 @@ namespace ElShaday.Data.Context;
 
 public class ElShadayContext : DbContext
 {
-    public DbSet<AdminUser> AdminUsers { get; set; }
-    public DbSet<CommonUser> CommonUsers { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Employee> Employees { get; set; }

@@ -9,50 +9,50 @@ using ApplicationException = ElShaday.Application.Configuration.ApplicationExcep
 
 namespace ElShaday.Application.Services;
 
-public class AdminUserService : IAdminUserService
+public class UserService : IUserService
 {
-    private readonly IAdminUserRepository _repository;
+    private readonly IUserRepository _repository;
     private readonly IMapper _mapper;
 
-    public AdminUserService(IAdminUserRepository repository, IMapper mapper)
+    public UserService(IUserRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
     }
 
-    public async Task<AdminUserResponseDto> CreateAsync(AdminUserRequestDto requestDto)
+    public async Task<UserResponseDto> CreateAsync(UserRequestDto requestDto)
     {
-        await ValidateNewAdminUserAsync(requestDto);
+        await ValidateNewUserAsync(requestDto);
         
-        var entity = _mapper.Map<AdminUser>(requestDto);
+        var entity = _mapper.Map<User>(requestDto);
         await _repository.CreateAsync(entity);
-        return _mapper.Map<AdminUserResponseDto>(entity);
+        return _mapper.Map<UserResponseDto>(entity);
     }
 
-    public async Task<AdminUserResponseDto> UpdateAsync(AdminUserRequestDto requestDto)
+    public async Task<UserResponseDto> UpdateAsync(UserRequestDto requestDto)
     {
-        var entity = _mapper.Map<AdminUser>(requestDto);
+        var entity = _mapper.Map<User>(requestDto);
 
-        await ValidateUpdateAdminUserAsync(entity);
+        await ValidateUpdateUserAsync(entity);
         
         await _repository.UpdateAsync(entity);
-        return _mapper.Map<AdminUserResponseDto>(entity);
+        return _mapper.Map<UserResponseDto>(entity);
     }
 
-    public async Task<AdminUserResponseDto?> GetByIdAsync(int id)
+    public async Task<UserResponseDto?> GetByIdAsync(int id)
     {
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
             return null;
-        return _mapper.Map<AdminUserResponseDto>(entity);
+        return _mapper.Map<UserResponseDto>(entity);
     }
 
-    public async Task<Paged<AdminUserResponseDto>> GetAsync(int page = 1, int pageSize = 25)
+    public async Task<Paged<UserResponseDto>> GetAsync(int page = 1, int pageSize = 25)
     {
         var pagedEntities = await _repository.GetAsync(page, pageSize);
-        var dtos = _mapper.Map<IEnumerable<AdminUserResponseDto>>(pagedEntities.Entities);
+        var dtos = _mapper.Map<IEnumerable<UserResponseDto>>(pagedEntities.Entities);
         
-        return new Paged<AdminUserResponseDto>(dtos, pagedEntities.Page, pagedEntities.PageSize, pagedEntities.Total, pagedEntities.TotalPages);
+        return new Paged<UserResponseDto>(dtos, pagedEntities.Page, pagedEntities.PageSize, pagedEntities.Total, pagedEntities.TotalPages);
     }
 
     public async Task DeleteAsync(int id)
@@ -71,7 +71,7 @@ public class AdminUserService : IAdminUserService
     {
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
-            throw new ApplicationException("Admin User not found");
+            throw new ApplicationException("User not found");
         
         entity.Deactivate();
         await _repository.UpdateAsync(entity);
@@ -81,29 +81,32 @@ public class AdminUserService : IAdminUserService
     {
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
-            throw new ApplicationException("Admin User not found");
+            throw new ApplicationException("User not found");
         
         entity.Activete();
         await _repository.UpdateAsync(entity);
     }
 
-    private async Task ValidateNewAdminUserAsync(AdminUserRequestDto entity)
+    private async Task ValidateNewUserAsync(UserRequestDto dto)
     {
-        if (await EmailExistsAsync(entity.Email))
+        if (!Enum.IsDefined(typeof(Role), dto.Role))
+            throw new ApplicationException("Invalid Role");
+
+        if (await EmailExistsAsync(dto.Email))
             throw new ApplicationException("Email already exists");
 
-        if (await NickNameExistsAsync(entity.NickName))
+        if (await NickNameExistsAsync(dto.NickName))
             throw new ApplicationException("NickName already exists");
 
-        if (!entity.Password.Equals(entity.ConfirmPassword))
+        if (!dto.Password.Equals(dto.ConfirmPassword))
             throw new ApplicationException("Password must be equals to Confirm Password");
     }
     
-    private async Task ValidateUpdateAdminUserAsync(AdminUser entity)
+    private async Task ValidateUpdateUserAsync(User entity)
     {
         var savedEntity = await _repository.GetByIdAsync(entity.Id);
         if (savedEntity is null)
-            throw new ApplicationException("Admin User not found");
+            throw new ApplicationException("User not found");
         
         if(entity.Email != savedEntity.Email)
             throw new ApplicationException("Cannot change email");

@@ -1,7 +1,7 @@
 ﻿namespace ElShaday.Domain.Entities.User;
 
-public enum UserProfile
+public enum Role
 {
-    Admin = 1,
+    Administrator = 1,
     Common = 2
 }

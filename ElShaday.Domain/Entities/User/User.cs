@@ -2,14 +2,15 @@
 
 namespace ElShaday.Domain.Entities.User;
 
-public abstract class User : Entity
+public sealed class User : Entity
 {
     public string Email { get; private set; }
     public string NickName { get; private set; }
-    public bool Active { get; protected set; }
-    public Password Password { get; protected set; }
+    public bool Active { get; private set; }
+    public Password Password { get; private set; }
+    public Role Role { get; set; }
 
-    protected User(string email, string nickName, string password)
+    public User(string email, string nickName, string password)
     {
         Email = email;
         NickName = nickName;
@@ -18,10 +19,10 @@ public abstract class User : Entity
     }
 
     // EF Constructor
-    protected User()
+    private User()
     {
     }
 
-    public virtual void Activete() => Active = true;
-    public virtual void Deactivate() => Active = false;
+    public void Activete() => Active = true;
+    public void Deactivate() => Active = false;
 }

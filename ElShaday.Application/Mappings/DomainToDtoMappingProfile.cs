@@ -9,10 +9,10 @@ public class DomainToDtoMappingProfile : Profile
 {
     public DomainToDtoMappingProfile()
     {
-        CreateMap<AdminUser, AdminUserRequestDto>()
+        CreateMap<User, UserRequestDto>()
             .ReverseMap();
 
-        CreateMap<AdminUser, AdminUserResponseDto>()
+        CreateMap<User, UserResponseDto>()
             .ReverseMap();
     }
 }

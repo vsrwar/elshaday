@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ElShaday.Data.EntitiesConfiguration;
 
-public class CommonUserConfiguration : IEntityTypeConfiguration<CommonUser>
+public class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<CommonUser> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("CommonUsers");
+        builder.ToTable("Users");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.CreatedAt)
@@ -49,5 +49,10 @@ public class CommonUserConfiguration : IEntityTypeConfiguration<CommonUser>
             .HasMaxLength(255)
             .IsRequired()
             .HasColumnName("PasswordSalt");
+
+        builder.Property(x => x.Role)
+            .HasColumnName("Role")
+            .HasColumnType("tinyint")
+            .IsRequired();
     }
 }

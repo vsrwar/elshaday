@@ -12,28 +12,28 @@ namespace ElShaday.API.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
 [AllowAnonymous]
-public class AdminUserController : ControllerBase
+public class UserController : ControllerBase
 {
-    private readonly IAdminUserService _service;
+    private readonly IUserService _service;
 
-    public AdminUserController(IAdminUserService service)
+    public UserController(IUserService service)
     {
         _service = service;
     }
 
     /// <summary>
-    /// Creates a new Admin User
+    /// Creates a new User
     /// </summary>
-    /// <param name="adminUserRequestDto">Email and Nickname</param>
+    /// <param name="userRequestDto">Email and Nickname</param>
     /// <returns>201 (created) Status code</returns>
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] AdminUserRequestDto adminUserRequestDto)
+    public async Task<IActionResult> CreateAsync([FromBody] UserRequestDto userRequestDto)
     {
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
         try
         {
-            var created = await _service.CreateAsync(adminUserRequestDto);
+            var created = await _service.CreateAsync(userRequestDto);
             return Created(created.Id.ToString(), created);
         }
         catch (ApplicationException e)
@@ -47,19 +47,19 @@ public class AdminUserController : ControllerBase
     }
     
     /// <summary>
-    /// Gets an Admin User by Id
+    /// Gets an User by Id
     /// </summary>
     /// <param name="id"></param>
-    /// <returns>Admin user</returns>
+    /// <returns>a User with id</returns>
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         try
         {
-            var adminUser = await _service.GetByIdAsync(id);
-            if (adminUser is null)
-                return NotFound($"Admin User id: {id} not found");
-            return Ok(adminUser);
+            var user = await _service.GetByIdAsync(id);
+            if (user is null)
+                return NotFound($"User id: {id} not found");
+            return Ok(user);
         }
         catch (Exception e)
         {
@@ -68,11 +68,11 @@ public class AdminUserController : ControllerBase
     }
     
     /// <summary>
-    /// Gets paginated Admin Users (default page: 1, default pageSize: 25)
+    /// Gets paginated Users (default page: 1, default pageSize: 25)
     /// </summary>
     /// <param name="page"></param>
     /// <param name="pageSize"></param>
-    /// <returns>A list of Admin User paginated</returns>
+    /// <returns>A list of Users paginated</returns>
     [HttpGet]
     public async Task<IActionResult> GetAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 25)
     {
@@ -88,18 +88,18 @@ public class AdminUserController : ControllerBase
     }
     
     /// <summary>
-    /// Updated an Admin User
+    /// Updates an User
     /// </summary>
-    /// <param name="adminUserRequestDto"></param>
-    /// <returns>Updated Admin User</returns>
+    /// <param name="userRequestDto"></param>
+    /// <returns>Updated User</returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync([FromBody] AdminUserRequestDto adminUserRequestDto)
+    public async Task<IActionResult> UpdateAsync([FromBody] UserRequestDto userRequestDto)
     {
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
         try
         {
-            var updated = await _service.UpdateAsync(adminUserRequestDto);
+            var updated = await _service.UpdateAsync(userRequestDto);
             return Ok(updated);
         }
         catch (ApplicationException e)
@@ -113,7 +113,7 @@ public class AdminUserController : ControllerBase
     }
     
     /// <summary>
-    /// Deletes (softly) an Admin User by Id
+    /// Deletes (softly) an User by Id
     /// </summary>
     /// <param name="id"></param>
     /// <returns>204 - No Content</returns>
@@ -132,7 +132,7 @@ public class AdminUserController : ControllerBase
     }
 
     /// <summary>
-    /// Deactivates an Admin User by Id
+    /// Deactivates an User by Id
     /// </summary>
     /// <param name="id"></param>
     /// <returns>204 - No Content</returns>
@@ -155,7 +155,7 @@ public class AdminUserController : ControllerBase
     }
 
     /// <summary>
-    /// Activates an Admin User by Id
+    /// Activates an User by Id
     /// </summary>
     /// <param name="id"></param>
     /// <returns>204 - No Content</returns>

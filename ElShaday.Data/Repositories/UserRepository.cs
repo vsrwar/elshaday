@@ -5,28 +5,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElShaday.Data.Repositories;
 
-public class AdminUserRepository : Repository<AdminUser>, IAdminUserRepository
+public class UserRepository : Repository<User>, IUserRepository
 {
     private readonly ElShadayContext _context;
-    public AdminUserRepository(ElShadayContext context) : base(context)
+    public UserRepository(ElShadayContext context) : base(context)
     {
         _context = context;
     }
 
     public async Task<bool> EmailExistsAsync(string email)
-        => await _context.AdminUsers.AnyAsync(x =>
+        => await _context.Users.AnyAsync(x =>
             x.Email.Equals(email)
             && !x.DeletedAt.HasValue
         );
 
     public async Task<bool> NickNameExistsAsync(string nickName)
-        => await _context.AdminUsers.AnyAsync(x =>
+        => await _context.Users.AnyAsync(x =>
             x.NickName.Equals(nickName)
             && !x.DeletedAt.HasValue
         );
 
     public async Task<bool> IdExistsAsync(int id)
-        => await _context.AdminUsers.AnyAsync(x =>
+        => await _context.Users.AnyAsync(x =>
             x.Id == id
             && !x.DeletedAt.HasValue
         );

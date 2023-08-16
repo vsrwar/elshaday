@@ -3,7 +3,7 @@ using ElShaday.Application.DTOs.Responses;
 
 namespace ElShaday.Application.Interfaces;
 
-public interface IAdminUserService : ICrudService<AdminUserRequestDto, AdminUserResponseDto>
+public interface IUserService : ICrudService<UserRequestDto, UserResponseDto>
 {
     Task<bool> EmailExistsAsync(string email);
     Task<bool> NickNameExistsAsync(string nickName);

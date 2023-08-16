@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ElShaday.Domain.Entities.User;
 
 namespace ElShaday.Application.DTOs.Requests;
 
-public class AdminUserRequestDto
+public class UserRequestDto
 {
     [Required]
     [MinLength(5)]
@@ -20,4 +21,6 @@ public class AdminUserRequestDto
     [MinLength(8)]
     [MaxLength(15)]
     public string ConfirmPassword { get; set; }
+    [Required]
+    public Role Role { get; set; }
 }

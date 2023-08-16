@@ -2,7 +2,7 @@
 
 namespace ElShaday.Domain.Interfaces;
 
-public interface IAdminUserRepository : IRepository<AdminUser>
+public interface IUserRepository : IRepository<User>
 {
     Task<bool> EmailExistsAsync(string email);
     Task<bool> NickNameExistsAsync(string nickName);
