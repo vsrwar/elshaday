@@ -22,10 +22,9 @@ public class AdminUserService : IAdminUserService
 
     public async Task<AdminUserResponseDto> CreateAsync(AdminUserRequestDto requestDto)
     {
-        var entity = _mapper.Map<AdminUser>(requestDto);
-
-        await ValidateNewAdminUserAsync(entity);
+        await ValidateNewAdminUserAsync(requestDto);
         
+        var entity = _mapper.Map<AdminUser>(requestDto);
         await _repository.CreateAsync(entity);
         return _mapper.Map<AdminUserResponseDto>(entity);
     }
@@ -88,13 +87,16 @@ public class AdminUserService : IAdminUserService
         await _repository.UpdateAsync(entity);
     }
 
-    private async Task ValidateNewAdminUserAsync(AdminUser entity)
+    private async Task ValidateNewAdminUserAsync(AdminUserRequestDto entity)
     {
         if (await EmailExistsAsync(entity.Email))
             throw new ApplicationException("Email already exists");
 
         if (await NickNameExistsAsync(entity.NickName))
             throw new ApplicationException("NickName already exists");
+
+        if (!entity.Password.Equals(entity.ConfirmPassword))
+            throw new ApplicationException("Password must be equals to Confirm Password");
     }
     
     private async Task ValidateUpdateAdminUserAsync(AdminUser entity)

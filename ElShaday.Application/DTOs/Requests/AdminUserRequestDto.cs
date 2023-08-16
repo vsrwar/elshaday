@@ -12,4 +12,12 @@ public class AdminUserRequestDto
     [MinLength(3)]
     [MaxLength(50)]
     public string NickName { get; set; }
+    [Required]
+    [MinLength(8)]
+    [MaxLength(15)]
+    public string Password { get; set; }
+    [Required]
+    [MinLength(8)]
+    [MaxLength(15)]
+    public string ConfirmPassword { get; set; }
 }

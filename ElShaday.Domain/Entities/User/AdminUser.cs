@@ -2,8 +2,13 @@
 
 public sealed class AdminUser : User
 {
-    public AdminUser(string email, string nickName)
-        : base(email, nickName)
+    public AdminUser(string email, string nickName, string password)
+        : base(email, nickName, password)
+    {
+    }
+
+    // EF Constructor
+    private AdminUser() : base()
     {
     }
 

@@ -2,8 +2,13 @@
 
 public sealed class CommonUser : User
 {
-    public CommonUser(string email, string nickName)
-        : base(email, nickName)
+    public CommonUser(string email, string nickName, string password)
+        : base(email, nickName, password)
+    {
+    }
+    
+    // EF Constructor
+    private CommonUser() : base()
     {
     }
 

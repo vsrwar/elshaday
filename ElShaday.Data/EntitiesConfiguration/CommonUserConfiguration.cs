@@ -37,5 +37,17 @@ public class CommonUserConfiguration : IEntityTypeConfiguration<CommonUser>
         builder.Property(x => x.Active)
             .HasColumnName("Active")
             .IsRequired();
+        
+        builder.OwnsOne(x => x.Password)
+            .Property(y => y.Hash)
+            .HasMaxLength(128)
+            .IsRequired()
+            .HasColumnName("PasswordHash");
+        
+        builder.OwnsOne(x => x.Password)
+            .Property(y => y.Salt)
+            .HasMaxLength(255)
+            .IsRequired()
+            .HasColumnName("PasswordSalt");
     }
 }

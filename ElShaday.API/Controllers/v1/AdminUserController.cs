@@ -29,6 +29,8 @@ public class AdminUserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] AdminUserRequestDto adminUserRequestDto)
     {
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
         try
         {
             var created = await _service.CreateAsync(adminUserRequestDto);
@@ -93,6 +95,8 @@ public class AdminUserController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] AdminUserRequestDto adminUserRequestDto)
     {
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
         try
         {
             var updated = await _service.UpdateAsync(adminUserRequestDto);
