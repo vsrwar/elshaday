@@ -57,16 +57,13 @@ public class UserService : IUserService
 
     public async Task DeleteAsync(int id)
     {
-        var exists = await IdExistsAsync(id);
-        if (!exists)
-            return;
         await _repository.DeleteAsync(id);
     }
 
     public async Task<bool> EmailExistsAsync(string email) => await _repository.EmailExistsAsync(email);
 
     public async Task<bool> NickNameExistsAsync(string nickName) => await _repository.NickNameExistsAsync(nickName);
-    public async Task<bool> IdExistsAsync(int id) => await _repository.IdExistsAsync(id);
+
     public async Task DeactivateAsync(int id)
     {
         var entity = await _repository.GetByIdAsync(id);

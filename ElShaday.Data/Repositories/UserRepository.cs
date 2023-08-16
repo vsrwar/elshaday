@@ -24,10 +24,4 @@ public class UserRepository : Repository<User>, IUserRepository
             x.NickName.Equals(nickName)
             && !x.DeletedAt.HasValue
         );
-
-    public async Task<bool> IdExistsAsync(int id)
-        => await _context.Users.AnyAsync(x =>
-            x.Id == id
-            && !x.DeletedAt.HasValue
-        );
 }

@@ -14,4 +14,9 @@ public sealed class Department : Entity
         Name = name;
         ResponsibleId = responsibleId;
     }
+
+    public void UpdateResponsable(int responsibleId)
+    {
+        ResponsibleId = responsibleId;
+    }
 }
