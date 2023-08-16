@@ -2,9 +2,14 @@
 
 public sealed class AdminUser : User
 {
-    public AdminUser(string email, string nickName, bool active)
-        : base(email, nickName, active)
+    public AdminUser(string email, string nickName)
+        : base(email, nickName)
     {
-        Profile = UserProfile.Admin;
+    }
+
+    public override void Delete()
+    {
+        base.Delete();
+        Active = false;
     }
 }

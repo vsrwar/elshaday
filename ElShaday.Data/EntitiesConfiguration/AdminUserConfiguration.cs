@@ -37,9 +37,5 @@ public class AdminUserConfiguration : IEntityTypeConfiguration<AdminUser>
         builder.Property(x => x.Active)
             .HasColumnName("Active")
             .IsRequired();
-        
-        builder.Property(x => x.Profile)
-            .HasColumnName("Profile")
-            .IsRequired();
     }
 }

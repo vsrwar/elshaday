@@ -2,7 +2,7 @@
 
 namespace ElShaday.Domain.ValueObjects;
 
-public class Paged<T> where T : Entity
+public class Paged<T>
 {
     public int Page { get; private set; }
     public int PageSize { get; private set; }

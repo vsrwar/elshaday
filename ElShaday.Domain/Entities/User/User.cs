@@ -4,16 +4,15 @@ public abstract class User : Entity
 {
     public string Email { get; private set; }
     public string NickName { get; private set; }
-    public bool Active { get; private set; }
-    public UserProfile Profile { get; protected set; }
+    public bool Active { get; protected set; }
 
-    protected User(string email, string nickName, bool active)
+    protected User(string email, string nickName)
     {
         Email = email;
         NickName = nickName;
-        Active = active;
+        Active = true;
     }
 
-    protected virtual void Activete() => Active = true;
-    protected virtual void Deactivate() => Active = false;
+    public virtual void Activete() => Active = true;
+    public virtual void Deactivate() => Active = false;
 }

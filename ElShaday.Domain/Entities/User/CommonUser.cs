@@ -2,9 +2,14 @@
 
 public sealed class CommonUser : User
 {
-    public CommonUser(string email, string nickName, bool active)
-        : base(email, nickName, active)
+    public CommonUser(string email, string nickName)
+        : base(email, nickName)
     {
-        Profile = UserProfile.Common;
+    }
+
+    public override void Delete()
+    {
+        base.Delete();
+        Active = false;
     }
 }
