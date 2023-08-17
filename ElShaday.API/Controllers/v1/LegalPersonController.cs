@@ -11,28 +11,28 @@ namespace ElShaday.API.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
 [AllowAnonymous]
-public class DepartmentController : ControllerBase
+public class LegalPersonController : ControllerBase
 {
-    private readonly IDepartmentService _service;
+    private readonly ILegalPersonService _service;
 
-    public DepartmentController(IDepartmentService service)
+    public LegalPersonController(ILegalPersonService service)
     {
         _service = service;
     }
 
     /// <summary>
-    /// Creates a new Department
+    /// Creates a new Legal Person
     /// </summary>
-    /// <param name="departmentForLegalPersonRequestDto">Name and responsableId</param>
+    /// <param name="departmentRequestDto"></param>
     /// <returns>201 (created) Status code</returns>
-    [HttpPost("for-legal-person")]
-    public async Task<IActionResult> CreateForLegalPersonAsync([FromBody] DepartmentForLegalPersonRequestDto departmentForLegalPersonRequestDto)
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync([FromBody] LegalPersonRequestDto departmentRequestDto)
     {
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
         try
         {
-            var created = await _service.CreateAsync(departmentForLegalPersonRequestDto);
+            var created = await _service.CreateAsync(departmentRequestDto);
             return Created(created.Id.ToString(), created);
         }
         catch (ApplicationException e)
@@ -41,40 +41,15 @@ public class DepartmentController : ControllerBase
         }
         catch (Exception e)
         {
-            return Problem(e.Message, nameof(CreateForLegalPersonAsync), (int)HttpStatusCode.InternalServerError);
-        }
-    }
-
-    /// <summary>
-    /// Creates a new Department
-    /// </summary>
-    /// <param name="departmentForPhysicalPersonRequestDto">Name and responsableId</param>
-    /// <returns>201 (created) Status code</returns>
-    [HttpPost("for-physical-person")]
-    public async Task<IActionResult> CreateForPhysicalAsync([FromBody] DepartmentForPhysicalPersonRequestDto departmentForPhysicalPersonRequestDto)
-    {
-        if(!ModelState.IsValid)
-            return BadRequest(ModelState);
-        try
-        {
-            var created = await _service.CreateAsync(departmentForPhysicalPersonRequestDto);
-            return Created(created.Id.ToString(), created);
-        }
-        catch (ApplicationException e)
-        {
-            return BadRequest(e.Message);
-        }
-        catch (Exception e)
-        {
-            return Problem(e.Message, nameof(CreateForPhysicalAsync), (int)HttpStatusCode.InternalServerError);
+            return Problem(e.Message, nameof(CreateAsync), (int)HttpStatusCode.InternalServerError);
         }
     }
     
     /// <summary>
-    /// Gets an Department by Id
+    /// Gets an Legal Person by Id
     /// </summary>
     /// <param name="id"></param>
-    /// <returns>a Department with id</returns>
+    /// <returns>a Legal Person with id</returns>
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
@@ -82,7 +57,7 @@ public class DepartmentController : ControllerBase
         {
             var department = await _service.GetByIdAsync(id);
             if (department is null)
-                return NotFound($"Department id: {id} not found");
+                return NotFound($"LegalPerson id: {id} not found");
             return Ok(department);
         }
         catch (Exception e)
@@ -92,11 +67,11 @@ public class DepartmentController : ControllerBase
     }
     
     /// <summary>
-    /// Gets paginated Departments (default page: 1, default pageSize: 25)
+    /// Gets paginated Legal Persons (default page: 1, default pageSize: 25)
     /// </summary>
     /// <param name="page"></param>
     /// <param name="pageSize"></param>
-    /// <returns>A list of Departments paginated</returns>
+    /// <returns>A list of LegalPersons paginated</returns>
     [HttpGet]
     public async Task<IActionResult> GetAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 25)
     {
@@ -112,18 +87,18 @@ public class DepartmentController : ControllerBase
     }
     
     /// <summary>
-    /// Updates an Department
+    /// Updates an Legal Person
     /// </summary>
-    /// <param name="departmentForLegalPersonRequestDto"></param>
-    /// <returns>Updated Department</returns>
+    /// <param name="departmentRequestDto"></param>
+    /// <returns>Updated Legal Person</returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync([FromBody] DepartmentForLegalPersonRequestDto departmentForLegalPersonRequestDto)
+    public async Task<IActionResult> UpdateAsync([FromBody] LegalPersonRequestDto departmentRequestDto)
     {
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
         try
         {
-            var updated = await _service.UpdateAsync(departmentForLegalPersonRequestDto);
+            var updated = await _service.UpdateAsync(departmentRequestDto);
             return Ok(updated);
         }
         catch (ApplicationException e)
@@ -137,7 +112,7 @@ public class DepartmentController : ControllerBase
     }
     
     /// <summary>
-    /// Deletes (softly) an Department by Id
+    /// Deletes (softly) an Legal Person by Id
     /// </summary>
     /// <param name="id"></param>
     /// <returns>204 - No Content</returns>

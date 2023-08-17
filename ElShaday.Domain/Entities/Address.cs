@@ -19,7 +19,7 @@ public sealed class Address : Entity
         string ibge, string gia, string ddd,
         string siafi)
     {
-        Cep = cep;
+        Cep = cep.Replace("-", "");
         Logradouro = logradouro;
         Complemento = complemento;
         Bairro = bairro;
@@ -29,5 +29,10 @@ public sealed class Address : Entity
         Gia = gia;
         Ddd = ddd;
         Siafi = siafi;
+    }
+
+    public void SetPersonId(int personId)
+    {
+        PersonId = personId;
     }
 }

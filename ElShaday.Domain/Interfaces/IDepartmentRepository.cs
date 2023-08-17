@@ -1,4 +1,4 @@
-﻿using ElShaday.Domain.Entities;
+﻿using ElShaday.Domain.Entities.Department;
 
 namespace ElShaday.Domain.Interfaces;
 

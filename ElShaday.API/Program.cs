@@ -1,5 +1,4 @@
 using ElShaday.API.Configuration;
-using ElShaday.Application.Mappings;
 using ElShaday.Crosscutting.Configuration;
 using Microsoft.OpenApi.Models;
 

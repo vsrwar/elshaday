@@ -25,6 +25,9 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+        services.AddScoped<ILegalPersonRepository, LegalPersonRepository>();
+        services.AddScoped<IPhysicalPersonRepository, PhysicalPersonRepository>();
+        services.AddScoped<IRepository<Address>, Repository<Address>>();
         return services;
     }
 
@@ -32,6 +35,8 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IDepartmentService, DepartmentService>();
+        services.AddScoped<ILegalPersonService, LegalPersonService>();
+        services.AddScoped<IPhysicalPersonService, PhysicalPersonService>();
         return services;
     }
     

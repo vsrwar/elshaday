@@ -1,5 +1,5 @@
 ﻿using ElShaday.Data.Context;
-using ElShaday.Domain.Entities;
+using ElShaday.Domain.Entities.Department;
 using ElShaday.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

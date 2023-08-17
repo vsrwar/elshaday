@@ -2,11 +2,19 @@
 
 public sealed class Cpf : Document
 {
+    private const int CpfLength = 11;
+
     public Cpf(string value)
     {
-        if (string.IsNullOrEmpty(value) || value.Length != 11)
-            throw new ArgumentException("CPF inválido.");
-
-        Value = value;
+        if (string.IsNullOrEmpty(value) || value.Length != CpfLength)
+            Valid = false;
+        else
+        {
+            Valid = true;
+            Value = value;
+        }
     }
+    
+    // EF Constructor
+    protected Cpf() { }
 }

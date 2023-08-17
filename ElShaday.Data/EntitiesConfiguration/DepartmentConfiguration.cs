@@ -1,4 +1,4 @@
-﻿using ElShaday.Domain.Entities;
+﻿using ElShaday.Domain.Entities.Department;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,8 +29,13 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
             .HasMaxLength(255)
             .IsRequired();
 
-        builder.HasOne(x => x.Responsible)
-            .WithMany()
-            .HasForeignKey(x => x.ResponsibleId);
+        builder.Property(x => x.LegalPersonId)
+            .HasColumnName("LegalPersonId");
+
+        builder.Property(x => x.PhysicalPersonId)
+            .HasColumnName("PhysicalPersonId");
+
+        builder.Property(x => x.PersonType)
+            .IsRequired();
     }
 }

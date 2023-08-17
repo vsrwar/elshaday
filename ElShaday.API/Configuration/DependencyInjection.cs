@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Versioning;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 
 namespace ElShaday.API.Configuration;
 
@@ -8,7 +9,7 @@ public static class DependencyInjection
     {
         services.AddApiVersioning(opt =>
         {
-            opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1,0);
+            opt.DefaultApiVersion = new ApiVersion(1,0);
             opt.AssumeDefaultVersionWhenUnspecified = true;
             opt.ReportApiVersions = true;
             opt.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),

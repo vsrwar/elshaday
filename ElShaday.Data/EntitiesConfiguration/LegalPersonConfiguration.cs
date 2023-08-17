@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ElShaday.Data.EntitiesConfiguration;
 
-public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
+public class LegalPersonConfiguration : IEntityTypeConfiguration<LegalPerson>
 {
-    public void Configure(EntityTypeBuilder<Supplier> builder)
+    public void Configure(EntityTypeBuilder<LegalPerson> builder)
     {
-        builder.ToTable("Suppliers");
+        builder.ToTable("LegalPeople");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.CreatedAt)
@@ -40,7 +40,12 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
 
         builder.HasOne(x => x.Address)
             .WithOne()
-            .HasForeignKey<Supplier>(x => x.AddressId)
+            .HasForeignKey<LegalPerson>(x => x.AddressId)
+            .IsRequired();
+
+        builder.Property(x => x.Qualifier)
+            .HasColumnName("Qualifier")
+            .HasColumnType("tinyint")
             .IsRequired();
     }
 }

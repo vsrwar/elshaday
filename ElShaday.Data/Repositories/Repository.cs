@@ -1,4 +1,6 @@
-﻿using ElShaday.Data.Context;
+﻿using System.Linq.Expressions;
+using ElShaday.Data.Configuration;
+using ElShaday.Data.Context;
 using ElShaday.Domain.Entities;
 using ElShaday.Domain.Interfaces;
 using ElShaday.Domain.ValueObjects;
@@ -9,6 +11,7 @@ namespace ElShaday.Data.Repositories;
 public class Repository<T> : IRepository<T> where T : Entity
 {
     private readonly ElShadayContext _context;
+
     public Repository(ElShadayContext context)
     {
         _context = context;
@@ -30,12 +33,31 @@ public class Repository<T> : IRepository<T> where T : Entity
         return entity;
     }
 
-    public async Task<T?> GetByIdAsync(int id) => await _context.Set<T>()
-        .AsNoTracking()
-        .FirstOrDefaultAsync(x =>
+    public async Task<T?> GetByIdAsync(int id, params Expression<Func<T, Entity>>[] includes)
+        => await _context.Set<T>()
+            .IncludeIf(includes.Any(), includes)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x =>
             x.Id == id
             && !x.DeletedAt.HasValue
-        );
+            );
+
+    public async Task<T?> GetByIdAsync(int id, params string[] includes)
+        => await _context.Set<T>()
+            .IncludeIf(includes.Any(), includes)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x =>
+            x.Id == id
+            && !x.DeletedAt.HasValue
+            );
+
+    public async Task<T?> GetByIdAsync(int id)
+        => await _context.Set<T>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x =>
+            x.Id == id
+            && !x.DeletedAt.HasValue
+            );
 
     public async Task<Paged<T>> GetAsync(int page = 1, int pageSize = 25)
     {

@@ -2,11 +2,19 @@
 
 public sealed class Cnpj : Document
 {
+    private const int CnpjLength = 14;
+
     public Cnpj(string value)
     {
-        if (string.IsNullOrEmpty(value) || value.Length != 14)
-            throw new ArgumentException("CNPJ inválido.");
-
-        Value = value;
+        if (string.IsNullOrEmpty(value) || value.Length != CnpjLength)
+            Valid = false;
+        else
+        {
+            Valid = true;
+            Value = value;    
+        }
     }
+    
+    // EF Constructor
+    protected Cnpj() { }
 }

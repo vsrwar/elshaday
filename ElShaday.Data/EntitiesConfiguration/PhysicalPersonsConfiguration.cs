@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ElShaday.Data.EntitiesConfiguration;
 
-public class CustomerLegalPersonConfiguration : IEntityTypeConfiguration<CustomerLegalPerson>
+public class PhysicalPersonConfiguration : IEntityTypeConfiguration<PhysicalPerson>
 {
-    public void Configure(EntityTypeBuilder<CustomerLegalPerson> builder)
+    public void Configure(EntityTypeBuilder<PhysicalPerson> builder)
     {
-        builder.ToTable("CustomerLegalPeople");
+        builder.ToTable("PhysicalPeople");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.CreatedAt)
@@ -23,24 +23,29 @@ public class CustomerLegalPersonConfiguration : IEntityTypeConfiguration<Custome
         builder.Property(x => x.DeletedAt)
             .HasColumnName("DeletedAt")
             .HasColumnType("datetime");
-        
+
         builder.OwnsOne(x => x.Document)
             .Property(y => y.Value)
             .HasColumnName("Document")
             .IsRequired();
 
-        builder.Property(x => x.CorporateName)
-            .HasColumnName("CorporateName")
+        builder.Property(x => x.Name)
+            .HasColumnName("Name")
             .HasMaxLength(255)
             .IsRequired();
 
-        builder.Property(x => x.FantasyName)
-            .HasColumnName("FantasyName")
-            .HasMaxLength(255);
-        
+        builder.Property(x => x.NickName)
+            .HasColumnName("NickName")
+            .HasMaxLength(50);
+
         builder.HasOne(x => x.Address)
             .WithOne()
-            .HasForeignKey<CustomerLegalPerson>(x => x.AddressId)
+            .HasForeignKey<PhysicalPerson>(x => x.AddressId)
+            .IsRequired();
+
+        builder.Property(x => x.Qualifier)
+            .HasColumnName("Qualifier")
+            .HasColumnType("tinyint")
             .IsRequired();
     }
 }

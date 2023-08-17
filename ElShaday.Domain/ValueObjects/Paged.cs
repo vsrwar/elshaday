@@ -1,6 +1,4 @@
-﻿using ElShaday.Domain.Entities;
-
-namespace ElShaday.Domain.ValueObjects;
+﻿namespace ElShaday.Domain.ValueObjects;
 
 public class Paged<T>
 {

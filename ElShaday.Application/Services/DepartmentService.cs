@@ -2,7 +2,9 @@
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.DTOs.Responses;
 using ElShaday.Application.Interfaces;
-using ElShaday.Domain.Entities;
+using ElShaday.Domain.Entities.Department;
+using ElShaday.Domain.Entities.Person;
+using ElShaday.Domain.Entities.Person.Abstractions;
 using ElShaday.Domain.Interfaces;
 using ElShaday.Domain.ValueObjects;
 
@@ -11,26 +13,22 @@ namespace ElShaday.Application.Services;
 public class DepartmentService : IDepartmentService
 {
     private readonly IDepartmentRepository _repository;
+    private readonly ILegalPersonRepository _legalPersonRepository;
+    private readonly IPhysicalPersonRepository _physicalPersonRepository;
     private readonly IMapper _mapper;
 
-    public DepartmentService(IDepartmentRepository repository, IMapper mapper)
+    public DepartmentService(IDepartmentRepository repository, IMapper mapper,
+        IPhysicalPersonRepository physicalPersonRepository, ILegalPersonRepository legalPersonRepository)
     {
         _repository = repository;
         _mapper = mapper;
+        _physicalPersonRepository = physicalPersonRepository;
+        _legalPersonRepository = legalPersonRepository;
     }
 
-    public async Task<DepartmentResponseDto> CreateAsync(DepartmentRequestDto requestDto)
+    public async Task<DepartmentResponseDto> UpdateAsync(DepartmentForLegalPersonRequestDto forLegalPersonRequestDto)
     {
-        await ValidateNewDepartmentAsync(requestDto);
-        
-        var entity = _mapper.Map<Department>(requestDto);
-        await _repository.CreateAsync(entity);
-        return _mapper.Map<DepartmentResponseDto>(entity);
-    }
-    
-    public async Task<DepartmentResponseDto> UpdateAsync(DepartmentRequestDto requestDto)
-    {
-        var entity = _mapper.Map<Department>(requestDto);
+        var entity = _mapper.Map<Department>(forLegalPersonRequestDto);
 
         await ValidateUpdateDepartmentAsync(entity);
         
@@ -59,29 +57,40 @@ public class DepartmentService : IDepartmentService
         await _repository.DeleteAsync(id);
     }
 
-    public async Task ChangeResponsibleAsync(int id, int responsibleId)
+    public async Task<DepartmentResponseDto> CreateAsync(DepartmentForPhysicalPersonRequestDto departmentForPhysicalPersonRequestDto)
     {
-        var entity = await _repository.GetByIdAsync(id);
-        if (entity is null)
-            return;
-
-        await ValidateResponsableIdAsync(responsibleId);
+        var entity = _mapper.Map<Department>(departmentForPhysicalPersonRequestDto);
+        await ValidateNewDepartmentAsync(entity);
         
-        entity.UpdateResponsable(responsibleId);
-        await _repository.UpdateAsync(entity);
+        var user = await GetResponsible(departmentForPhysicalPersonRequestDto.PhysicalPersonId, PersonType.Physical);
+        if (user is null)
+            throw new ApplicationException("Responsible not found");
+        
+        entity.UpdateResponsible(user);
+
+        await _repository.CreateAsync(entity);
+        return _mapper.Map<DepartmentResponseDto>(entity);
     }
 
-    private async Task ValidateResponsableIdAsync(int responsibleId)
+    public async Task<DepartmentResponseDto> CreateAsync(DepartmentForLegalPersonRequestDto departmentForLegalPersonRequestDto)
     {
-        throw new NotImplementedException();
+        var entity = _mapper.Map<Department>(departmentForLegalPersonRequestDto);
+        await ValidateNewDepartmentAsync(entity);
+        
+        var user = await GetResponsible(departmentForLegalPersonRequestDto.LegalPersonId, PersonType.Legal);
+        if (user is null)
+            throw new ApplicationException("Responsible not found");
+
+        entity.UpdateResponsible(user);
+
+        await _repository.CreateAsync(entity);
+        return _mapper.Map<DepartmentResponseDto>(entity);
     }
 
-    private async Task ValidateNewDepartmentAsync(DepartmentRequestDto requestDto)
+    private async Task ValidateNewDepartmentAsync(Department department)
     {
-        if (await _repository.NameExistsAsync(requestDto.Name))
+        if (await _repository.NameExistsAsync(department.Name))
             throw new ApplicationException("Department Name already exists");
-        
-        await ValidateResponsableIdAsync(requestDto.ResponsibleId);
     }
 
     private async Task ValidateUpdateDepartmentAsync(Department entity)
@@ -92,7 +101,15 @@ public class DepartmentService : IDepartmentService
 
         if (await _repository.NameExistsAsync(entity.Name))
             throw new ApplicationException("Department Name already exists");
-        
-        await ValidateResponsableIdAsync(entity.ResponsibleId);
+    }
+
+    private async Task<Person?> GetResponsible(int responsibleId, PersonType type)
+    {
+        return type switch
+        {
+            PersonType.Legal => await _legalPersonRepository.GetByIdAsync(responsibleId),
+            PersonType.Physical => await _physicalPersonRepository.GetByIdAsync(responsibleId),
+            _ => throw new ApplicationException("Invalid Person Qualifier")
+        };
     }
 }

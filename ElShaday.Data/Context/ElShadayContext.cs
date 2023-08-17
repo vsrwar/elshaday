@@ -1,4 +1,5 @@
 ﻿using ElShaday.Domain.Entities;
+using ElShaday.Domain.Entities.Department;
 using ElShaday.Domain.Entities.Person;
 using ElShaday.Domain.Entities.User;
 using Microsoft.EntityFrameworkCore;
@@ -9,10 +10,8 @@ public class ElShadayContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Department> Departments { get; set; }
-    public DbSet<Supplier> Suppliers { get; set; }
-    public DbSet<Employee> Employees { get; set; }
-    public DbSet<CustomerPhysicalPerson> CustomerPhysicalPersons { get; set; }
-    public DbSet<CustomerLegalPerson> CustomerLegalPersons { get; set; }
+    public DbSet<PhysicalPerson> PhysicalPeople { get; set; }
+    public DbSet<LegalPerson> LegalPeople { get; set; }
     public DbSet<Address> Addresses { get; set; }
 
     public ElShadayContext(DbContextOptions<ElShadayContext> options)
