@@ -13,4 +13,5 @@ public interface IRepository<T> where T : Entity
     Task<T?> GetByIdAsync(int id);
     Task<Paged<T>> GetAsync(int page = 1, int pageSize = 25);
     Task DeleteAsync(int id);
+    Task<int> CountActivesAsync();
 }

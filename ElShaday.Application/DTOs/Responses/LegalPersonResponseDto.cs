@@ -13,5 +13,5 @@ public class LegalPersonResponseDto
     public string CorporateName { get; set; }
     public string FantasyName { get; set; }
     public PersonType Type { get; set; }
-    public IEnumerable<DepartmentResponseDto> Departments { get; set; }
+    public ICollection<DepartmentResponseDto> Departments { get; set; }
 }

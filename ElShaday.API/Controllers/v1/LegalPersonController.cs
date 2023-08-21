@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using ElShaday.Application.DTOs.Requests;
+using ElShaday.Application.DTOs.Responses;
 using ElShaday.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -127,6 +128,42 @@ public class LegalPersonController : ControllerBase
         catch (Exception e)
         {
             return Problem(e.Message, nameof(DeleteAsync), (int)HttpStatusCode.InternalServerError);
+        }
+    }
+    
+    /// <summary>
+    /// returns a list of persons available to be assigned to a department
+    /// </summary>
+    /// <returns>A list of LegalPersonResponseDto</returns>
+    [HttpGet("available-for-department")]
+    public async Task<IActionResult> GetAvailableForDepartmentAsync()
+    {
+        try
+        {
+            var available = await _service.GetAvailableForDepartmentAsync();
+            return Ok(available);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message, nameof(GetAvailableForDepartmentAsync), (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    /// <summary>
+    /// Returns the count of active Legal People
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("count-actives")]
+    public async Task<IActionResult> CountActivesAsync()
+    {
+        try
+        {
+            int count = await _service.CountActivesAsync();
+            return Ok(count);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message, nameof(CountActivesAsync), (int)HttpStatusCode.InternalServerError);
         }
     }
 }

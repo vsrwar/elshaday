@@ -23,6 +23,15 @@ public sealed class User : Entity
     {
     }
 
-    public void Activete() => Active = true;
+    public void Update(string? email = null, string? nickName = null, Role? role = null, bool? active = null)
+    {
+        Email = email ?? Email;
+        NickName = nickName ?? NickName;
+        Role = role ?? Role;
+        Active = active ?? Active;
+        base.Update();
+    }
+
+    public void Activate() => Active = true;
     public void Deactivate() => Active = false;
 }

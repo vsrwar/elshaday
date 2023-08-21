@@ -19,9 +19,18 @@ public class UserRepository : Repository<User>, IUserRepository
             && !x.DeletedAt.HasValue
         );
 
-    public async Task<bool> NickNameExistsAsync(string nickName)
-        => await _context.Users.AnyAsync(x =>
+    public async Task<bool> NickNameExistsAsync(int? selfId, string nickName)
+    {
+        if(selfId.HasValue)
+            return await _context.Users.AnyAsync(x =>
+                x.NickName.Equals(nickName)
+                && !x.DeletedAt.HasValue
+                && x.Id != selfId.Value
+            );
+        
+        return await _context.Users.AnyAsync(x =>
             x.NickName.Equals(nickName)
             && !x.DeletedAt.HasValue
-        );
+        ); 
+    }
 }

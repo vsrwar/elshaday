@@ -4,6 +4,7 @@ namespace ElShaday.Domain.Interfaces;
 
 public interface ILegalPersonRepository : IRepository<LegalPerson>
 {
-    Task<bool> DocumentExistsAsync(string document);
+    Task<bool> DocumentExistsAsync(int? selfId, string document);
     Task<LegalPerson?> GetFullByIdAsync(int id);
+    Task<IEnumerable<LegalPerson>> GetAvailableForDepartmentAsync();
 }

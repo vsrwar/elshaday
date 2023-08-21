@@ -15,11 +15,19 @@ public class PhysicalPersonRepository : Repository<PhysicalPerson>, IPhysicalPer
         _context = context;
     }
 
-    public async Task<bool> DocumentExistsAsync(string document)
-        => await _context.PhysicalPeople.AnyAsync(x =>
+    public async Task<bool> DocumentExistsAsync(int? selfId, string document)
+    {
+        if (!selfId.HasValue)
+            return await _context.PhysicalPeople.AnyAsync(x =>
+                x.Document.Value.Equals(document)
+                && !x.DeletedAt.HasValue
+            );
+        return await _context.PhysicalPeople.AnyAsync(x =>
             x.Document.Value.Equals(document)
             && !x.DeletedAt.HasValue
+            && x.Id != selfId.Value
         );
+    }
 
     public async Task<PhysicalPerson?> GetFullByIdAsync(int id)
         => await _context.PhysicalPeople
@@ -29,4 +37,10 @@ public class PhysicalPersonRepository : Repository<PhysicalPerson>, IPhysicalPer
                 x.Id == id
                 && !x.DeletedAt.HasValue
             );
+
+    public async Task<IEnumerable<PhysicalPerson>> GetAvailableForDepartmentAsync()
+        => await _context.PhysicalPeople
+            .Where(x => x.Qualifier == PersonQualifier.Employee
+                        && !x.DeletedAt.HasValue)
+            .ToListAsync();
 }

@@ -86,4 +86,9 @@ public class Repository<T> : IRepository<T> where T : Entity
         entity.Delete();
         await UpdateAsync(entity);
     }
+
+    public async Task<int> CountActivesAsync()
+        => await _context.Set<T>()
+            .Where(x => !x.DeletedAt.HasValue)
+            .CountAsync();
 }

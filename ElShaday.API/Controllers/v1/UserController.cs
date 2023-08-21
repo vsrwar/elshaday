@@ -93,7 +93,7 @@ public class UserController : ControllerBase
     /// <param name="userRequestDto"></param>
     /// <returns>Updated User</returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync([FromBody] UserRequestDto userRequestDto)
+    public async Task<IActionResult> UpdateAsync([FromBody] UserEditRequestDto userRequestDto)
     {
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -174,6 +174,25 @@ public class UserController : ControllerBase
         catch (Exception e)
         {
             return Problem(e.Message, nameof(DeactivateAsync), (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+        
+    /// <summary>
+    /// Returns the count of active Users
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("count-actives")]
+    public async Task<IActionResult> CountActivesAsync()
+    {
+        try
+        {
+            int count = await _service.CountActivesAsync();
+            return Ok(count);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message, nameof(CountActivesAsync), (int)HttpStatusCode.InternalServerError);
         }
     }
 }

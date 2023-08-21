@@ -13,11 +13,12 @@ public sealed class Address : Entity
     public string Gia { get; private set; }
     public string Ddd { get; private set; }
     public string Siafi { get; private set; }
+    public string Numero { get; set; }
     
     public Address(string cep, string logradouro, string complemento,
         string bairro, string localidade, string uf,
         string ibge, string gia, string ddd,
-        string siafi)
+        string siafi, string numero)
     {
         Cep = cep.Replace("-", "");
         Logradouro = logradouro;
@@ -29,6 +30,7 @@ public sealed class Address : Entity
         Gia = gia;
         Ddd = ddd;
         Siafi = siafi;
+        Numero = numero;
     }
 
     public void SetPersonId(int personId)

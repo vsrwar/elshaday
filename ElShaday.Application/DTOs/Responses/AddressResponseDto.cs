@@ -13,4 +13,5 @@ public class AddressResponseDto
     public string Gia { get; set; }
     public string Ddd { get; set; }
     public string Siafi { get; set; }
+    public string Numero { get; set; }
 }

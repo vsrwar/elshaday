@@ -6,6 +6,7 @@ namespace ElShaday.Application.DTOs.Requests;
 
 public class DepartmentForPhysicalPersonRequestDto
 {
+    public int? Id { get; set; }
     [Required]
     public string Name { get; set; }
     [Required]

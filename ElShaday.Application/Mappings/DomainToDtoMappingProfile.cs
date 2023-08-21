@@ -16,6 +16,8 @@ public class DomainToDtoMappingProfile : Profile
             .ReverseMap();
         CreateMap<User, UserResponseDto>()
             .ReverseMap();
+        CreateMap<UserRequestDto, UserEditRequestDto>()
+            .ReverseMap();
         
         CreateMap<DepartmentForLegalPersonRequestDto, Department>()
             .ForMember(x => x.LegalPersonId, opt => opt.MapFrom(y => y.LegalPersonId))

@@ -154,4 +154,22 @@ public class DepartmentController : ControllerBase
             return Problem(e.Message, nameof(DeleteAsync), (int)HttpStatusCode.InternalServerError);
         }
     }
+    
+    /// <summary>
+    /// Returns the count of active Departments
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("count-actives")]
+    public async Task<IActionResult> CountActivesAsync()
+    {
+        try
+        {
+            int count = await _service.CountActivesAsync();
+            return Ok(count);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message, nameof(CountActivesAsync), (int)HttpStatusCode.InternalServerError);
+        }
+    }
 }

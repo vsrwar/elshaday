@@ -87,6 +87,9 @@ public class DepartmentService : IDepartmentService
         return _mapper.Map<DepartmentResponseDto>(entity);
     }
 
+    public async Task<int> CountActivesAsync()
+        => await _repository.CountActivesAsync();
+
     private async Task ValidateNewDepartmentAsync(Department department)
     {
         if (await _repository.NameExistsAsync(department.Name))

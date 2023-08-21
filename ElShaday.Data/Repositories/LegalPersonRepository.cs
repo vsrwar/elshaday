@@ -14,11 +14,19 @@ public class LegalPersonRepository : Repository<LegalPerson>, ILegalPersonReposi
         _context = context;
     }
 
-    public async Task<bool> DocumentExistsAsync(string document)
-        => await _context.LegalPeople.AnyAsync(x =>
+    public async Task<bool> DocumentExistsAsync(int? selfId, string document)
+    {
+        if(!selfId.HasValue)
+            return await _context.LegalPeople.AnyAsync(x =>
+                x.Document.Value.Equals(document)
+                && !x.DeletedAt.HasValue
+            );
+        return await _context.LegalPeople.AnyAsync(x =>
             x.Document.Value.Equals(document)
             && !x.DeletedAt.HasValue
-        );
+            && x.Id != selfId.Value
+        ); 
+    }
 
     public async Task<LegalPerson?> GetFullByIdAsync(int id)
         => await _context.LegalPeople
@@ -28,4 +36,10 @@ public class LegalPersonRepository : Repository<LegalPerson>, ILegalPersonReposi
             x.Id == id
             && !x.DeletedAt.HasValue
         );
+
+    public async Task<IEnumerable<LegalPerson>> GetAvailableForDepartmentAsync()
+        => await _context.LegalPeople
+            .Where(x => x.Qualifier == PersonQualifier.Employee
+                && !x.DeletedAt.HasValue)
+            .ToListAsync();
 }

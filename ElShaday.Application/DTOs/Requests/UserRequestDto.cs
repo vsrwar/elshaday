@@ -5,6 +5,7 @@ namespace ElShaday.Application.DTOs.Requests;
 
 public class UserRequestDto
 {
+    public int? Id { get; set; }
     [Required]
     [MinLength(5)]
     [MaxLength(255)]
@@ -23,4 +24,6 @@ public class UserRequestDto
     public string ConfirmPassword { get; set; }
     [Required]
     public Role Role { get; set; }
+
+    public bool Active { get; set; }
 }

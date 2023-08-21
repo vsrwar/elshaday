@@ -12,4 +12,5 @@ public interface IDepartmentService
     Task DeleteAsync(int id);
     Task<DepartmentResponseDto> CreateAsync(DepartmentForPhysicalPersonRequestDto departmentForPhysicalPersonRequestDto);
     Task<DepartmentResponseDto> CreateAsync(DepartmentForLegalPersonRequestDto departmentForLegalPersonRequestDto);
+    Task<int> CountActivesAsync();
 }

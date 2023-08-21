@@ -26,9 +26,6 @@ public class LegalPersonService : ILegalPersonService
     {
         await ValidateLegalPersonAsync(requestDto);
         
-        var address = _mapper.Map<Address>(requestDto.Address);
-        await _addressRepository.CreateAsync(address);
-        
         var entity = _mapper.Map<LegalPerson>(requestDto);
         await _repository.CreateAsync(entity);
         return _mapper.Map<LegalPersonResponseDto>(entity);
@@ -65,9 +62,15 @@ public class LegalPersonService : ILegalPersonService
         await _repository.DeleteAsync(id);
     }
 
+    public async Task<IEnumerable<LegalPersonResponseDto>> GetAvailableForDepartmentAsync()
+        => _mapper.Map<IEnumerable<LegalPersonResponseDto>>(await _repository.GetAvailableForDepartmentAsync());
+
+    public async Task<int> CountActivesAsync()
+        => await _repository.CountActivesAsync();
+
     private async Task ValidateLegalPersonAsync(LegalPersonRequestDto requestDto)
     {
-        if (await _repository.DocumentExistsAsync(requestDto.Cnpj))
+        if (await _repository.DocumentExistsAsync(requestDto.Id, requestDto.Cnpj))
             throw new ApplicationException("Document already exists");
     }
 }

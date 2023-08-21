@@ -13,14 +13,12 @@ namespace ElShaday.Application.Services;
 public class PhysicalPersonService : IPhysicalPersonService
 {
     private readonly IPhysicalPersonRepository _repository;
-    private readonly IRepository<Address> _addressRepository;
     private readonly IMapper _mapper;
 
-    public PhysicalPersonService(IPhysicalPersonRepository repository, IMapper mapper, IRepository<Address> addressRepository)
+    public PhysicalPersonService(IPhysicalPersonRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
-        _addressRepository = addressRepository;
     }
 
     public async Task<PhysicalPersonResponseDto> CreateAsync(PhysicalPersonRequestDto requestDto)
@@ -31,11 +29,6 @@ public class PhysicalPersonService : IPhysicalPersonService
             var entity = _mapper.Map<PhysicalPerson>(requestDto);
             await _repository.CreateAsync(entity);
 
-            var address = _mapper.Map<Address>(requestDto.Address);
-            address.SetPersonId(entity.Id);
-            await _addressRepository.CreateAsync(address);
-
-            entity.SetAddressId(address.Id);
             await _repository.UpdateAsync(entity);
         
             return _mapper.Map<PhysicalPersonResponseDto>(entity);
@@ -48,11 +41,15 @@ public class PhysicalPersonService : IPhysicalPersonService
 
     public async Task<PhysicalPersonResponseDto> UpdateAsync(PhysicalPersonRequestDto requestDto)
     {
+        await ValidatePhysicalPersonAsync(requestDto);
         var entity = _mapper.Map<PhysicalPerson>(requestDto);
         
         await _repository.UpdateAsync(entity);
         return _mapper.Map<PhysicalPersonResponseDto>(entity);
     }
+
+    public async Task<IEnumerable<PhysicalPersonResponseDto>> GetAvailableForDepartmentAsync()
+        => _mapper.Map<IEnumerable<PhysicalPersonResponseDto>>(await _repository.GetAvailableForDepartmentAsync());
 
     public async Task<PhysicalPersonResponseDto?> GetByIdAsync(int id)
     {
@@ -75,9 +72,12 @@ public class PhysicalPersonService : IPhysicalPersonService
         await _repository.DeleteAsync(id);
     }
 
+    public async Task<int> CountActivesAsync()
+        => await _repository.CountActivesAsync();
+
     private async Task ValidatePhysicalPersonAsync(PhysicalPersonRequestDto requestDto)
     {
-        if (await _repository.DocumentExistsAsync(requestDto.Cpf))
+        if (await _repository.DocumentExistsAsync(requestDto.Id, requestDto.Cpf))
             throw new System.ApplicationException("Document already exists");
     }
 }

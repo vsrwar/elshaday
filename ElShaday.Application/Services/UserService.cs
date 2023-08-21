@@ -25,16 +25,15 @@ public class UserService : IUserService
         await ValidateNewUserAsync(requestDto);
         
         var entity = _mapper.Map<User>(requestDto);
+        entity.Activate();
         await _repository.CreateAsync(entity);
         return _mapper.Map<UserResponseDto>(entity);
     }
 
-    public async Task<UserResponseDto> UpdateAsync(UserRequestDto requestDto)
+    public async Task<UserResponseDto> UpdateAsync(UserEditRequestDto requestDto)
     {
-        var entity = _mapper.Map<User>(requestDto);
-
-        await ValidateUpdateUserAsync(entity);
-        
+        var entity = await ValidateUpdateUserAsync(requestDto);
+        entity.Update(requestDto.Email, requestDto.NickName, requestDto.Role, requestDto.Active);
         await _repository.UpdateAsync(entity);
         return _mapper.Map<UserResponseDto>(entity);
     }
@@ -62,7 +61,7 @@ public class UserService : IUserService
 
     public async Task<bool> EmailExistsAsync(string email) => await _repository.EmailExistsAsync(email);
 
-    public async Task<bool> NickNameExistsAsync(string nickName) => await _repository.NickNameExistsAsync(nickName);
+    public async Task<bool> NickNameExistsAsync(int? selfId, string nickName) => await _repository.NickNameExistsAsync(selfId, nickName);
 
     public async Task DeactivateAsync(int id)
     {
@@ -80,9 +79,12 @@ public class UserService : IUserService
         if (entity is null)
             throw new ApplicationException("User not found");
         
-        entity.Activete();
+        entity.Activate();
         await _repository.UpdateAsync(entity);
     }
+
+    public async Task<int> CountActivesAsync()
+        => await _repository.CountActivesAsync();
 
     private async Task ValidateNewUserAsync(UserRequestDto dto)
     {
@@ -92,23 +94,28 @@ public class UserService : IUserService
         if (await EmailExistsAsync(dto.Email))
             throw new ApplicationException("Email already exists");
 
-        if (await NickNameExistsAsync(dto.NickName))
+        if (await NickNameExistsAsync(dto.Id, dto.NickName))
             throw new ApplicationException("NickName already exists");
 
         if (!dto.Password.Equals(dto.ConfirmPassword))
             throw new ApplicationException("Password must be equals to Confirm Password");
     }
     
-    private async Task ValidateUpdateUserAsync(User entity)
+    private async Task<User> ValidateUpdateUserAsync(UserEditRequestDto request)
     {
-        var savedEntity = await _repository.GetByIdAsync(entity.Id);
+        var savedEntity = await _repository.GetByIdAsync(request.Id);
         if (savedEntity is null)
             throw new ApplicationException("User not found");
         
-        if(entity.Email != savedEntity.Email)
+        if(request.Email != savedEntity.Email)
             throw new ApplicationException("Cannot change email");
-        
-        if(await NickNameExistsAsync(entity.NickName))
+
+        if(string.IsNullOrEmpty(request.NickName))
+            throw new ApplicationException("NickName cannot be empty");
+
+        if(await NickNameExistsAsync(request.Id, request.NickName))
             throw new ApplicationException("NickName already exists");
+
+        return savedEntity;
     }
 }

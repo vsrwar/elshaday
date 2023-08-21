@@ -1,6 +1,7 @@
 ﻿using ElShaday.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ElShaday.Data.EntitiesConfiguration;
 
@@ -62,5 +63,9 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         builder.Property(x => x.Siafi)
             .HasMaxLength(25)
             .HasColumnName("Siafi");
+
+        builder.Property(x => x.Numero)
+            .HasMaxLength(10)
+            .IsRequired();
     }
 }

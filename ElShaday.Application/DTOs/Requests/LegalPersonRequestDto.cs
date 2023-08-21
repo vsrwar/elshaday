@@ -5,6 +5,7 @@ namespace ElShaday.Application.DTOs.Requests;
 
 public class LegalPersonRequestDto
 {
+    public int? Id { get; set; }
     [Required]
     public AddressRequestDto Address { get; set; }
     [Required]
