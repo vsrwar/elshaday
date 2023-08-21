@@ -29,8 +29,6 @@ public class PhysicalPersonService : IPhysicalPersonService
             var entity = _mapper.Map<PhysicalPerson>(requestDto);
             await _repository.CreateAsync(entity);
 
-            await _repository.UpdateAsync(entity);
-        
             return _mapper.Map<PhysicalPersonResponseDto>(entity);
         }
         catch (ApplicationException e)

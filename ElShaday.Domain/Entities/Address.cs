@@ -2,7 +2,6 @@
 
 public sealed class Address : Entity
 {
-    public int PersonId { get; set; }
     public string Cep { get; private set; }
     public string Logradouro { get; private set; }
     public string Complemento { get; private set; }
@@ -31,10 +30,5 @@ public sealed class Address : Entity
         Ddd = ddd;
         Siafi = siafi;
         Numero = numero;
-    }
-
-    public void SetPersonId(int personId)
-    {
-        PersonId = personId;
     }
 }
