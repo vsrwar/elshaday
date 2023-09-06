@@ -9,4 +9,14 @@ public class UserResponseDto
     public string NickName { get; set; }
     public bool Active { get; set; }
     public Role Role { get; set; }
+
+    public string RoleString()
+    {
+        return Role switch
+        {
+            Role.Administrator => "Administrator",
+            Role.Common => "Common",
+            _ => string.Empty
+        };
+    }
 }

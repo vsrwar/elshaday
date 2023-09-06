@@ -10,7 +10,7 @@ namespace ElShaday.API.Controllers.v1;
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
-[AllowAnonymous]
+[Authorize]
 public class PhysicalPersonController : ControllerBase
 {
     private readonly IPhysicalPersonService _service;

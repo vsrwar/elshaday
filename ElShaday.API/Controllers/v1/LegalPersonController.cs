@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using ElShaday.Application.DTOs.Requests;
-using ElShaday.Application.DTOs.Responses;
 using ElShaday.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,7 @@ namespace ElShaday.API.Controllers.v1;
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
-[AllowAnonymous]
+[Authorize]
 public class LegalPersonController : ControllerBase
 {
     private readonly ILegalPersonService _service;

@@ -83,6 +83,22 @@ public class UserService : IUserService
         await _repository.UpdateAsync(entity);
     }
 
+    public async Task<UserResponseDto> VerifyLoginAsync(LoginRequestDto loginRequestDto)
+    {
+        var entity = await _repository.GetByEmailAsync(loginRequestDto.Email);
+        if(entity is null)
+            throw new ApplicationException("User email or passwod is incorrect.");
+
+        if(!entity.Active)
+            throw new ApplicationException("User inactive, please contact support.");
+        
+        var isValidPassword = entity.VerifyPassword(loginRequestDto.Password);
+        if(!isValidPassword)
+            throw new ApplicationException("User email or passwod is incorrect.");
+        
+        return _mapper.Map<UserResponseDto>(entity);
+    }
+
     public async Task<int> CountActivesAsync()
         => await _repository.CountActivesAsync();
 

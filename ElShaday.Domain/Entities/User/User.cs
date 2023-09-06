@@ -22,6 +22,8 @@ public sealed class User : Entity
     private User()
     {
     }
+    
+    public bool VerifyPassword(string password) => Password.Compare(password);
 
     public void Update(string? email = null, string? nickName = null, Role? role = null, bool? active = null)
     {

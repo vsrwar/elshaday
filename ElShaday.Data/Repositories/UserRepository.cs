@@ -33,4 +33,12 @@ public class UserRepository : Repository<User>, IUserRepository
             && !x.DeletedAt.HasValue
         ); 
     }
+
+    public async Task<User?> GetByEmailAsync(string email)
+        => await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x =>
+                x.Email == email
+                && !x.DeletedAt.HasValue
+            ); 
 }

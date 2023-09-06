@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using ElShaday.API.Configuration;
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace ElShaday.API.Controllers.v1;
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
-[AllowAnonymous]
+[Authorize(Policy.Administrator)]
 public class UserController : ControllerBase
 {
     private readonly IUserService _service;

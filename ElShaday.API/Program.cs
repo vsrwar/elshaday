@@ -1,4 +1,5 @@
 using ElShaday.API.Configuration;
+using ElShaday.Application.Interfaces;
 using ElShaday.Crosscutting.Configuration;
 using Microsoft.OpenApi.Models;
 
@@ -14,10 +15,14 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddJwtConfiguration(builder.Configuration);
+builder.Services.AddPolicies();
+
 // Add services to the container.
 builder.Services.AddDataBaseConfiguration(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddServices();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -68,6 +73,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

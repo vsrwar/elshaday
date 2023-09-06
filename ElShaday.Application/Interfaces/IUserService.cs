@@ -11,4 +11,5 @@ public interface IUserService : ICrudService<UserRequestDto, UserResponseDto>, I
     Task DeactivateAsync(int id);
     Task ActivateAsync(int id);
     Task<int> CountActivesAsync();
+    Task<UserResponseDto> VerifyLoginAsync(LoginRequestDto loginRequestDto);
 }
