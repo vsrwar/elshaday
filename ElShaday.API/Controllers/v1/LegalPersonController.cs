@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.Interfaces;
+using ElShaday.Domain.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,7 @@ public class LegalPersonController : ControllerBase
             var created = await _service.CreateAsync(departmentRequestDto);
             return Created(created.Id.ToString(), created);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -101,7 +102,7 @@ public class LegalPersonController : ControllerBase
             var updated = await _service.UpdateAsync(departmentRequestDto);
             return Ok(updated);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -123,6 +124,10 @@ public class LegalPersonController : ControllerBase
         {
             await _service.DeleteAsync(id);
             return NoContent();
+        }
+        catch (BusinessException e)
+        {
+            return BadRequest(e.Message);
         }
         catch (Exception e)
         {

@@ -1,4 +1,5 @@
-﻿using ElShaday.Domain.ValueObjects.Documents;
+﻿using ElShaday.Domain.Configuration;
+using ElShaday.Domain.ValueObjects.Documents;
 
 namespace ElShaday.Domain.Entities.Person;
 
@@ -13,7 +14,7 @@ public sealed class LegalPerson : Abstractions.Person
     {
         Document = new Cnpj(document);
         if (!Document.Valid)
-            throw new ApplicationException("Invalid CNPJ.");
+            throw new BusinessException("Invalid CNPJ.");
         
         CorporateName = corporateName;
         FantasyName = fantasyName;
@@ -24,5 +25,10 @@ public sealed class LegalPerson : Abstractions.Person
     private LegalPerson()
     {
         Type = PersonType.Legal;
+    }
+
+    public override string GetResponsibleName()
+    {
+        return $"(legal) - {CorporateName}";
     }
 }

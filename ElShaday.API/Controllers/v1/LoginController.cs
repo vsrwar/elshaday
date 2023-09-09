@@ -2,6 +2,7 @@
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.DTOs.Responses;
 using ElShaday.Application.Interfaces;
+using ElShaday.Domain.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,13 +39,36 @@ public class LoginController : ControllerBase
             var token = _tokenService.GenerateTokenAsync(user);
             return Ok(new LoginResponseDto(user, token));
         }
-        catch (ElShaday.Application.Configuration.ApplicationException e)
+        catch (BusinessException e)
         {
             return Unauthorized(e.Message);
         }
         catch (Exception e)
         {
             return Problem(e.Message, nameof(LoginAsync), (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the User is available for Password Recovery
+    /// </summary>
+    /// <param name="nickName">users' nickname</param>
+    /// <returns></returns>
+    [HttpGet("CheckNickNameForPasswordRecovery/{nickName}")]
+    public async Task<IActionResult> CheckNickNameForPasswordRecovery([FromRoute] string nickName)
+    {
+        try
+        {
+            var canChange = await _userService.CanChangePasswordAsync(nickName);
+            return Ok(canChange);
+        }
+        catch (BusinessException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message, nameof(CheckNickNameForPasswordRecovery), (int)HttpStatusCode.InternalServerError);
         }
     }
 }

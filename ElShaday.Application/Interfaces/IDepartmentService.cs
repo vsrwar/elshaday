@@ -1,5 +1,6 @@
 ﻿using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.DTOs.Responses;
+using ElShaday.Domain.Entities.Person;
 using ElShaday.Domain.ValueObjects;
 
 namespace ElShaday.Application.Interfaces;
@@ -13,4 +14,5 @@ public interface IDepartmentService
     Task<DepartmentResponseDto> CreateAsync(DepartmentForPhysicalPersonRequestDto departmentForPhysicalPersonRequestDto);
     Task<DepartmentResponseDto> CreateAsync(DepartmentForLegalPersonRequestDto departmentForLegalPersonRequestDto);
     Task<int> CountActivesAsync();
+    Task<bool> HasDepartmentsAsync(int personId, PersonType personType);
 }

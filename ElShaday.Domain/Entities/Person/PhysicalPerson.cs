@@ -1,4 +1,5 @@
-﻿using ElShaday.Domain.ValueObjects.Documents;
+﻿using ElShaday.Domain.Configuration;
+using ElShaday.Domain.ValueObjects.Documents;
 
 namespace ElShaday.Domain.Entities.Person;
 
@@ -13,7 +14,7 @@ public sealed class PhysicalPerson : Abstractions.Person
     {
         Document = new Cpf(document);
         if (!Document.Valid)
-            throw new ApplicationException("Invalid CPF.");
+            throw new BusinessException("Invalid CPF.");
 
         Name = name;
         NickName = nickName;
@@ -29,5 +30,10 @@ public sealed class PhysicalPerson : Abstractions.Person
     public void SetAddressId(int addressId)
     {
         AddressId = addressId;
+    }
+
+    public override string GetResponsibleName()
+    {
+        return $"(physical) - {Name}";
     }
 }

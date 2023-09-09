@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.Interfaces;
+using ElShaday.Domain.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,7 @@ public class DepartmentController : ControllerBase
             var created = await _service.CreateAsync(departmentForLegalPersonRequestDto);
             return Created(created.Id.ToString(), created);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -60,7 +61,7 @@ public class DepartmentController : ControllerBase
             var created = await _service.CreateAsync(departmentForPhysicalPersonRequestDto);
             return Created(created.Id.ToString(), created);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -126,7 +127,7 @@ public class DepartmentController : ControllerBase
             var updated = await _service.UpdateAsync(departmentForLegalPersonRequestDto);
             return Ok(updated);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }

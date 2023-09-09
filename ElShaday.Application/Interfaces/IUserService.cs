@@ -12,4 +12,6 @@ public interface IUserService : ICrudService<UserRequestDto, UserResponseDto>, I
     Task ActivateAsync(int id);
     Task<int> CountActivesAsync();
     Task<UserResponseDto> VerifyLoginAsync(LoginRequestDto loginRequestDto);
+    Task<bool> CanChangePasswordAsync(string nickName);
+    Task<bool> ChangePasswordAsync(ChangeUserPasswordDto changeUserPasswordDto);
 }

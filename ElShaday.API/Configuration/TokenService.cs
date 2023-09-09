@@ -29,7 +29,7 @@ public class TokenService : ITokenService
                 new Claim(ClaimTypes.Email, userResponseDto.Email),
                 new Claim(ClaimTypes.Role, userResponseDto.RoleString()),
             }),
-            Expires = DateTime.UtcNow.AddDays(7),
+            Expires = DateTime.UtcNow.AddHours(8),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             Audience = jwtConfiguration.Audience,
             Issuer = jwtConfiguration.Issuer

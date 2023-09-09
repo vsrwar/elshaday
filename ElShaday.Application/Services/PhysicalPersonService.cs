@@ -2,23 +2,24 @@
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.DTOs.Responses;
 using ElShaday.Application.Interfaces;
-using ElShaday.Domain.Entities;
+using ElShaday.Domain.Configuration;
 using ElShaday.Domain.Entities.Person;
 using ElShaday.Domain.Interfaces;
 using ElShaday.Domain.ValueObjects;
-using ApplicationException = ElShaday.Application.Configuration.ApplicationException;
 
 namespace ElShaday.Application.Services;
 
 public class PhysicalPersonService : IPhysicalPersonService
 {
     private readonly IPhysicalPersonRepository _repository;
+    private readonly IDepartmentService _departmentService;
     private readonly IMapper _mapper;
 
-    public PhysicalPersonService(IPhysicalPersonRepository repository, IMapper mapper)
+    public PhysicalPersonService(IPhysicalPersonRepository repository, IMapper mapper, IDepartmentService departmentService)
     {
         _repository = repository;
         _mapper = mapper;
+        _departmentService = departmentService;
     }
 
     public async Task<PhysicalPersonResponseDto> CreateAsync(PhysicalPersonRequestDto requestDto)
@@ -31,7 +32,7 @@ public class PhysicalPersonService : IPhysicalPersonService
 
             return _mapper.Map<PhysicalPersonResponseDto>(entity);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             throw e;
         }
@@ -40,6 +41,8 @@ public class PhysicalPersonService : IPhysicalPersonService
     public async Task<PhysicalPersonResponseDto> UpdateAsync(PhysicalPersonRequestDto requestDto)
     {
         await ValidatePhysicalPersonAsync(requestDto);
+        await ValidateForChangesAsync(requestDto.Id);
+        
         var entity = _mapper.Map<PhysicalPerson>(requestDto);
         
         await _repository.UpdateAsync(entity);
@@ -67,6 +70,7 @@ public class PhysicalPersonService : IPhysicalPersonService
 
     public async Task DeleteAsync(int id)
     {
+        await ValidateForChangesAsync(id);
         await _repository.DeleteAsync(id);
     }
 
@@ -76,6 +80,20 @@ public class PhysicalPersonService : IPhysicalPersonService
     private async Task ValidatePhysicalPersonAsync(PhysicalPersonRequestDto requestDto)
     {
         if (await _repository.DocumentExistsAsync(requestDto.Id, requestDto.Cpf))
-            throw new System.ApplicationException("Document already exists");
+            throw new BusinessException("Document already exists");
+    }
+    
+    private async Task ValidateForChangesAsync(int? id)
+    {
+        if(!id.HasValue || id.Value == 0)
+            throw new BusinessException("Id is required");
+
+        var savedEntity = await _repository.GetByIdAsync(id.Value);
+        if(savedEntity is null)
+            throw new BusinessException("Person not found");
+
+        bool hasDepartments = await _departmentService.HasDepartmentsAsync(id.Value, PersonType.Physical);
+        if (hasDepartments)
+            throw new BusinessException("Cannt do this, because this person has departments");
     }
 }

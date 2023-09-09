@@ -36,4 +36,15 @@ public sealed class User : Entity
 
     public void Activate() => Active = true;
     public void Deactivate() => Active = false;
+
+    public void ChangePassword(string password)
+    {
+        Password = new Password(password);
+    }
+
+    public override void Delete()
+    {
+        base.Delete();
+        Deactivate();
+    }
 }

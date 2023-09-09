@@ -4,6 +4,6 @@ namespace ElShaday.Application.DTOs.Requests;
 
 public class LoginRequestDto
 {
-    [Required] public string Email { get; set; }
+    [Required] public string NickName { get; set; }
     [Required] public string Password { get; set; }
 }

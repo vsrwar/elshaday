@@ -2,9 +2,9 @@
 using ElShaday.API.Configuration;
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.Interfaces;
+using ElShaday.Domain.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ApplicationException = ElShaday.Application.Configuration.ApplicationException;
 
 namespace ElShaday.API.Controllers.v1;
 
@@ -37,7 +37,7 @@ public class UserController : ControllerBase
             var created = await _service.CreateAsync(userRequestDto);
             return Created(created.Id.ToString(), created);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -103,7 +103,7 @@ public class UserController : ControllerBase
             var updated = await _service.UpdateAsync(userRequestDto);
             return Ok(updated);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -145,7 +145,7 @@ public class UserController : ControllerBase
             await _service.DeactivateAsync(id);
             return NoContent();
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -168,7 +168,7 @@ public class UserController : ControllerBase
             await _service.ActivateAsync(id);
             return NoContent();
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -194,6 +194,31 @@ public class UserController : ControllerBase
         catch (Exception e)
         {
             return Problem(e.Message, nameof(CountActivesAsync), (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    /// <summary>
+    /// Changes a user's password 
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("change-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangeUserPasswordDto changeUserPasswordDto)
+    {
+        if(!ModelState.IsValid)
+            return BadRequest(ModelState);
+        try
+        {
+            bool changed = await _service.ChangePasswordAsync(changeUserPasswordDto);
+            return Ok(changed);
+        }
+        catch (BusinessException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message, nameof(ChangePassword), (int)HttpStatusCode.InternalServerError);
         }
     }
 }

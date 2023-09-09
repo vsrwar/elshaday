@@ -20,4 +20,9 @@ public abstract class Person : Entity
     protected Person()
     {
     }
+
+    public virtual string GetResponsibleName()
+    {
+        return string.Empty;
+    }
 }

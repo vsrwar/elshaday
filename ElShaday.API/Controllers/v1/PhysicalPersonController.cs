@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.Interfaces;
+using ElShaday.Domain.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,7 +36,7 @@ public class PhysicalPersonController : ControllerBase
             var created = await _service.CreateAsync(physicalPersonRequestDto);
             return Created(created.Id.ToString(), created);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -101,7 +102,7 @@ public class PhysicalPersonController : ControllerBase
             var updated = await _service.UpdateAsync(physicalPersonRequestDto);
             return Ok(updated);
         }
-        catch (ApplicationException e)
+        catch (BusinessException e)
         {
             return BadRequest(e.Message);
         }
@@ -123,6 +124,10 @@ public class PhysicalPersonController : ControllerBase
         {
             await _service.DeleteAsync(id);
             return NoContent();
+        }
+        catch (BusinessException e)
+        {
+            return BadRequest(e.Message);
         }
         catch (Exception e)
         {

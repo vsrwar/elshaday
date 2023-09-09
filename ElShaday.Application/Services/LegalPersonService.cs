@@ -2,7 +2,7 @@
 using ElShaday.Application.DTOs.Requests;
 using ElShaday.Application.DTOs.Responses;
 using ElShaday.Application.Interfaces;
-using ElShaday.Domain.Entities;
+using ElShaday.Domain.Configuration;
 using ElShaday.Domain.Entities.Person;
 using ElShaday.Domain.Interfaces;
 using ElShaday.Domain.ValueObjects;
@@ -12,14 +12,14 @@ namespace ElShaday.Application.Services;
 public class LegalPersonService : ILegalPersonService
 {
     private readonly ILegalPersonRepository _repository;
-    private readonly IRepository<Address> _addressRepository;
+    private readonly IDepartmentService _departmentService;
     private readonly IMapper _mapper;
 
-    public LegalPersonService(ILegalPersonRepository repository, IMapper mapper, IRepository<Address> addressRepository)
+    public LegalPersonService(ILegalPersonRepository repository, IMapper mapper, IDepartmentService departmentService)
     {
         _repository = repository;
         _mapper = mapper;
-        _addressRepository = addressRepository;
+        _departmentService = departmentService;
     }
 
     public async Task<LegalPersonResponseDto> CreateAsync(LegalPersonRequestDto requestDto)
@@ -34,6 +34,7 @@ public class LegalPersonService : ILegalPersonService
     public async Task<LegalPersonResponseDto> UpdateAsync(LegalPersonRequestDto requestDto)
     {
         await ValidateLegalPersonAsync(requestDto);
+        await ValidateForChangesAsync(requestDto.Id);
         
         var entity = _mapper.Map<LegalPerson>(requestDto);
         
@@ -59,6 +60,7 @@ public class LegalPersonService : ILegalPersonService
 
     public async Task DeleteAsync(int id)
     {
+        await ValidateForChangesAsync(id);
         await _repository.DeleteAsync(id);
     }
 
@@ -71,6 +73,20 @@ public class LegalPersonService : ILegalPersonService
     private async Task ValidateLegalPersonAsync(LegalPersonRequestDto requestDto)
     {
         if (await _repository.DocumentExistsAsync(requestDto.Id, requestDto.Cnpj))
-            throw new ApplicationException("Document already exists");
+            throw new BusinessException("Document already exists");
+    }
+    
+    private async Task ValidateForChangesAsync(int? id)
+    {
+        if(!id.HasValue || id.Value == 0)
+            throw new BusinessException("Id is required");
+
+        var savedEntity = await _repository.GetByIdAsync(id.Value);
+        if(savedEntity is null)
+            throw new BusinessException("Person not found");
+
+        bool hasDepartments = await _departmentService.HasDepartmentsAsync(id.Value, PersonType.Legal);
+        if (hasDepartments)
+            throw new BusinessException("Cann't do this, because this person has departments");
     }
 }

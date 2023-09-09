@@ -1,4 +1,5 @@
-﻿using ElShaday.Domain.Entities.Person;
+﻿using ElShaday.Domain.Configuration;
+using ElShaday.Domain.Entities.Person;
 
 namespace ElShaday.Domain.Entities.Department;
 
@@ -39,6 +40,6 @@ public class Department : Entity
     private void ValidateUser(Person.Abstractions.Person user)
     {
         if (user.Qualifier != PersonQualifier.Employee)
-            throw new ApplicationException("User must be an Employee");
+            throw new BusinessException("User must be an Employee");
     }
 }

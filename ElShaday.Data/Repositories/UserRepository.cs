@@ -34,11 +34,11 @@ public class UserRepository : Repository<User>, IUserRepository
         ); 
     }
 
-    public async Task<User?> GetByEmailAsync(string email)
+    public async Task<User?> GetByNickNameAsync(string nick)
         => await _context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(x =>
-                x.Email == email
+                x.NickName == nick
                 && !x.DeletedAt.HasValue
             ); 
 }
