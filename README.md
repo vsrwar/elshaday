@@ -18,3 +18,10 @@ dotnet ef --startup-project .\ElShaday.API\ --project .\ElShaday.Data\ migration
 ```shel
 dotnet ef --startup-project .\ElShaday.API\ --project .\ElShaday.Data\ database update
 ```
+Realizar o seguinte include no banco:
+```sql
+INSERT INTO Users (Email, NickName, Active, PasswordHash, PasswordSalt, Role, CreatedAt, UpdatedAt, DeletedAt)
+VALUES ('admin@elshaday.com', 'Admin', 1, '123', CONVERT(varbinary, '123'), 1, GETUTCDATE(), NULL, NULL);
+```
+
+Realizar os passos de "Forgot password?" para definir a senha de acesso do usuário "Admin".
